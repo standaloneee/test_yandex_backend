@@ -51,7 +51,7 @@ dependencies {
     implementation "org.mapstruct:mapstruct:$mapstruct"
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapstruct"
 
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
 
     //Validation
     implementation 'javax.validation:validation-api:2.0.1.Final'
@@ -102,10 +102,4 @@ compileJava {
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-springBoot {
-    mainClass = 'ru.stand.contest.restapi_yandex.RestApiYandexApplication'
-}
-springBoot {
-    mainClass = 'ru.stand.contest.restapi_yandex.RestApiYandexApplication'
 }
