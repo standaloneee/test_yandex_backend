@@ -28,14 +28,14 @@ public abstract class ItemMapper {
 
     public static final ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 
-//    @Mapping(target = "items", expression = "java(systemItem.getItems())")
+    @Mapping(target = "items", source = "")
     @Mapping(target = "date", source = "date")
     @Mapping(target = "url", expression = "java(systemItem.getUrl())")
     @Mapping(target = "size", expression = "java(systemItem.getSize())")
     public abstract Item toEntity(SystemItemImportDto systemItem, Date date);
 
     @Mapping(target = "children", source = "item", qualifiedByName = "children")
-    @Mapping(target = "size", expression = "java(JsonNullable.of(Long.valueOf(item.getItems().size())))")
+    @Mapping(target = "size", expression = "java(item.getSize())")
     @Mapping(target = "url", expression = "java(JsonNullable.of(item.getUrl()))")
     @Mapping(target = "date", expression = "java(new java.util.Date(item.getDate().getTime()))")
     public abstract SystemItem toDto(Item item);

@@ -50,7 +50,7 @@ public class Item {
     @Column(name = "size")
     private Long size;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @ToString.Exclude
     private List<Item> items;

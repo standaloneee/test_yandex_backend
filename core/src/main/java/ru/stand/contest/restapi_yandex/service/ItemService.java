@@ -1,5 +1,6 @@
 package ru.stand.contest.restapi_yandex.service;
 
+import liquibase.repackaged.net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -33,22 +34,69 @@ public class ItemService {
     @SneakyThrows
     @Transactional()
     public SystemItemImportDto setItems(List<SystemItemImportRequest> systemItem) throws Error {
-        ImportsValidator checkValidItem= new ImportsValidator();
-        log.debug("123");
-//        ImportsValidator.validateFile(systemItem);
+        ImportsValidator checkValidItem = new ImportsValidator();
+//        log.debug("setItemsService");
         List<Item> itemsList = new ArrayList<>();
+//        List<Item> FiolderPlusSizeList = new ArrayList<>();
         for (SystemItemImportRequest request : systemItem) {
             itemsList.addAll(request.getItems().stream()
                     .map(item -> ItemMapper.INSTANCE.toEntity(item, new Date(request.getUpdateDate().getTime())))
-                    //.peek(item -> checkValidItem.validateItem(item))
-                    .peek(itemRepository::save)
+                    .peek(checkValidItem::validateItem)
+
+
                     .collect(Collectors.toList()));
         }
 
-//        ImportsValidator.validateItems(itemsList);
 
+        itemRepository.saveAll(itemsList);
+        log.debug(String.valueOf(itemsList));
+
+
+
+        log.debug(String.valueOf(itemsList));
+
+        for (Item item:itemsList) {
+            updateFolderSize(item);
+        }
+        for (var item : itemsList) {
+           var parent = item;
+           var child = item;
+            while(child.getParentId()!=null){
+                parent = itemRepository.getItemById(child.getParentId());
+                parent.setSize(item.getSize() + parent.getSize());
+                child = parent;
+            }
+        }
         return null;
     }
+
+    public void updateFolderSize(Item item) {
+        var tempFolder = item;
+
+        if (item.getParentId() != null) {
+            tempFolder = itemRepository.findById(item.getParentId()).orElseThrow(() -> new ItemNotFoundException("хуй"));
+        } else {
+            return;
+        }
+        var fSize = 0;
+        for (var fItem : tempFolder.getItems()) {
+            fSize += fItem.getSize();
+            if (fSize == tempFolder.getSize()) {
+
+            } else {
+                tempFolder.setSize((long) fSize);
+                updateFolderSize(tempFolder);
+            }
+        }
+    }
+//    public void ChangeParentFolderSize(long deltaSize, Item folder){
+//        var parentFolder = folder;
+//        while(folder.getParentId() != null)
+//        {
+//            parentFolder = itemRepository.getItemById(folder.getParentId());
+//            parentFolder.setSize(parentFolder.getSize()+deltaSize);
+//        }
+//    }
 
     public ResponseEntity<SystemItem> getSystemItem(String id) {
         Optional<Item> optionalItem = itemRepository.findById(UUID.fromString(id));
