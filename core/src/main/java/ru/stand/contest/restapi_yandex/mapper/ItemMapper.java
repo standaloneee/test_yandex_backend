@@ -28,7 +28,7 @@ public abstract class ItemMapper {
 
     public static final ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 
-    @Mapping(target = "items", source = "")
+//    @Mapping(target = "items", source = "")
     @Mapping(target = "date", source = "date")
     @Mapping(target = "url", expression = "java(systemItem.getUrl())")
     @Mapping(target = "size", expression = "java(systemItem.getSize())")
