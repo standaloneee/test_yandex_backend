@@ -42,32 +42,19 @@ public class ItemService {
             itemsList.addAll(request.getItems().stream()
                     .map(item -> ItemMapper.INSTANCE.toEntity(item, new Date(request.getUpdateDate().getTime())))
                     .peek(checkValidItem::validateItem)
-
-
+                    .peek(this::updateFolderSize)
                     .collect(Collectors.toList()));
         }
 
 
-        itemRepository.saveAll(itemsList);
+//        itemRepository.saveAll(itemsList);
         log.debug(String.valueOf(itemsList));
 
 
-
         log.debug(String.valueOf(itemsList));
 
-        for (Item item:itemsList) {
-            updateFolderSize(item);
-        }
-        for (var item : itemsList) {
-           var parent = item;
-           var child = item;
-            while(child.getParentId()!=null){
-                parent = itemRepository.getItemById(child.getParentId());
-                parent.setSize(item.getSize() + parent.getSize());
-                child = parent;
-            }
-        }
         return null;
+
     }
 
     public void updateFolderSize(Item item) {
@@ -89,14 +76,6 @@ public class ItemService {
             }
         }
     }
-//    public void ChangeParentFolderSize(long deltaSize, Item folder){
-//        var parentFolder = folder;
-//        while(folder.getParentId() != null)
-//        {
-//            parentFolder = itemRepository.getItemById(folder.getParentId());
-//            parentFolder.setSize(parentFolder.getSize()+deltaSize);
-//        }
-//    }
 
     public ResponseEntity<SystemItem> getSystemItem(String id) {
         Optional<Item> optionalItem = itemRepository.findById(UUID.fromString(id));
