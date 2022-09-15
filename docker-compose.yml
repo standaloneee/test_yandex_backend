@@ -4,7 +4,7 @@ services:
       - ./pg_data:/var/lib/postgresql/data/pgdata
     container_name: db
     image: postgres
-    hostname: database
+    hostname: db
     restart: always
     networks:
       - back-tier
