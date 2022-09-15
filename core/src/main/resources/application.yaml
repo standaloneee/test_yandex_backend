@@ -1,0 +1,48 @@
+server:
+  port: 80
+  servlet:
+    encoding:
+      force-response: true
+      charset: UTF-8
+
+spring:
+  main:
+    banner-mode: off
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    hikari:
+      maximum-pool-size: 6
+      minimum-idle: 2
+      connection-timeout: 10000
+  application:
+    name: restapi_yandex
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        hbm2ddl:
+          auto: validate
+  mandatory-file-encoding: utf-8
+  jackson:
+    date-format: ru.stand.contest.restapi_yandex.invoker.RFC3339DateFormat
+    serialization:
+      write-dates-as-timestamps: false
+  liquibase:
+    enabled: true
+    change-log: 'classpath:liquibase/changelog-master.yml'
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+
+logging:
+  level:
+    root: warn
+    ru: debug
