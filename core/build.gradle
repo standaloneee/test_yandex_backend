@@ -103,3 +103,6 @@ compileJava {
 tasks.named('test') {
     useJUnitPlatform()
 }
+springBoot {
+    mainClass = 'ru.stand.contest.restapi_yandex.RestApiYandexApplication'
+}
