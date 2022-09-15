@@ -6,6 +6,8 @@
 package ru.stand.contest.restapi_yandex.controller;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.stand.contest.restapi_yandex.model.Error;
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,7 +76,7 @@ public interface DeleteApi {
     default ResponseEntity<Void> deleteIdDelete(
         @Parameter(name = "id", description = "Идентификатор", required = true) @PathVariable("id") @UUID String id,
         @NotNull @Parameter(name = "date", description = "Дата и время запроса", required = true)
-        @Valid @RequestParam(value = "date", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date date
+        @Valid @RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date date
     ) {
         return deleteItem(id, date);
 
