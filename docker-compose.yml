@@ -20,7 +20,7 @@ services:
 
 
 
-  client:
+  main-service:
     restart: always
     container_name: core
     networks:
@@ -29,9 +29,9 @@ services:
       context: ./core
       dockerfile: Dockerfile
     environment:
-      - spring.datasource.url=jdbc:postgresql://database:5432/postgres
+      - spring.datasource.url=jdbc:postgresql://db:5432/postgres
     depends_on:
-      - database
+      - db
     ports:
       - "80:80"
     expose:
